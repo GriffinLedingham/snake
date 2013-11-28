@@ -43,19 +43,26 @@
 			this.stage = stage;
 			this.socketConnect();
 			this.SceneManager = new Game.Scenes.SceneManager();
-			createjs.Ticker.useRAF = true;
-			createjs.Ticker.setFPS(60);				
+			createjs.Ticker.useRAF = false;
+			createjs.Ticker.setFPS(30);				
 			createjs.Ticker.addEventListener("tick", tick);	
 		},
 
 
 		socketConnect:function(){
-			var socket = io.connect('http://192.168.1.111:8142');
-	        socket.on('message',function(data){
-	            console.log(data);
-	        });
-	        this.socket = socket;
+			if(io){
+				var socket = io.connect('http://192.168.1.111:8142');
+		       	socket.on('connect',function(){
+		       		console.log('socket connected');
+		       	});
+		        socket.on('message',function(data){
+		            console.log(data);
+		        });
+	        	this.socket = socket;
+        	}		          	
 		},
+
+ 	
 		/**
 		 * Trace
 		 */

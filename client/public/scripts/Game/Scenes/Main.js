@@ -15,21 +15,50 @@
 		 * Intialize
 		 */
 		initialize:function(){
-			this.snake = new Game.Characters.Snake(0,0);
-			this.tick = 0;
+			this.snakes = {};
+			this.ticks = 0;
 			this.bindToSocketEvents();
 			this.ready = true;
+			// this.singlePlayer = true;
+
+			if(this.singlePlayer){
+				this.snakes[1];
+			}
 		},
 
 
 		bindToSocketEvents:function(){
-			Game.socket.on('playerUpdate', Game.proxy(this.updatePlayers, this));
+			if(Game.socket){
+				Game.socket.on('playerUpdate', Game.proxy(this.updatePlayers, this));
+				Game.socket.on('newPlayer', Game.proxy(this.newPlayer, this));			
+				Game.socket.on('removePlayer', Game.proxy(this.removePlayer, this));			
+			}
 		},
 
-		updatePlayers:function(pos){
-			var head = this.snake.head;
-			head.x = pos.x;
-			head.y = pos.y;
+		removePlayer:function(player){
+			if(this.snakes[player.id]){
+				delete this.snakes[player.id];
+			}
+		},
+
+		newPlayer:function(player){
+			var snake = new Snake(player.x, player.y);
+			this.snakes[player.id] = snake;
+		},
+
+		updatePlayers:function(players){
+			var snakes = this.snakes;
+			for(var i in players){
+				var player = players[i];
+				if(snakes[player.id]){
+					var snake = snakes[player.id];
+					snake.sync = player;
+				} else {
+					console.log('Creating Snake ' + player.id);
+					var snake = new Snake(player.x, player.y);
+					snakes[player.id] = snake;
+				}
+			}
 		},
 
 
@@ -38,11 +67,13 @@
 		 */
 		update:function(){
 			if(this.ready){
-				// this.snake.update();
-				this.snake.draw();
-				this.tick++;
+				var snakes = this.snakes;
+				for(var i in snakes){
+					snakes[i].update();
+					snakes[i].draw();
+				}
+				this.ticks++;
 			}
-			console.log('scene update');
 		},
 
 

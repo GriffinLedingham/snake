@@ -16,8 +16,8 @@
 
 		initialize:function(x,y){
 			this.path = [];
-			this.head = new Cartesian(0,0);
-			this.prevPos = new Cartesian(0,0);
+			this.head = new Cartesian(x,y);
+			this.prevPos = new Cartesian(x,y);
 			this.speed = 10;
 			this.direction = new Cartesian(0,0);
 			this.gamePad = new GamePad();
@@ -56,23 +56,33 @@
 
 
 		update:function(){
-			var tick = Game.SceneManager.currentScene.tick;
+			var ticks = Game.SceneManager.currentScene.ticks;
 			this.gamePad.update();
-			if(tick % this.speed == 0){
-				this.control();
-				this.prevPos.equ(this.head);
-				this.head.inc(this.direction);
-				if(this.child){
-					this.child.update();
-				}
-			}
-			
 
-			if(this.head.x > 18){
-				this.head.x = 0;
+			if(this.sync){
+				console.log('Player Syncing');
+				this.head.x = this.sync.x;
+				this.head.y = this.sync.y
+				this.direction.x = this.sync.dir_x;
+				this.direction.y = this.sync.dir_y;
+				Game.SceneManager.currentScene.ticks = this.sync.ticks;
+				this.sync = null;
 			}
 
 
+			// else {
+			// 	if(ticks % this.speed == 0){
+			// 		this.control();
+			// 		this.prevPos.equ(this.head);
+			// 		this.head.inc(this.direction);
+			// 		if(this.child){
+			// 			this.child.update();
+			// 		}
+			// 	}
+			// }
+
+
+	
 		},
 
 		control:function(){
@@ -115,13 +125,13 @@
 
 		draw:function(){
 
-			var pos = this.head.factor(50);			
+			var pos = this.head.factor(20);			
 			var x = pos.x;
 			var y = pos.y;
 
 			var context = Game.ctx;
 		    context.beginPath();
-		    context.rect(x, y, 50, 50);
+		    context.rect(x, y, 20, 20);
 		    context.fillStyle = '#3D5FA2';
 		    context.fill();
 		    context.lineWidth = 1;
