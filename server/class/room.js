@@ -2,11 +2,10 @@ var grid_width = 10;
 var grid_height = 10;
 
 function Room(id) {
-  this.id = id
+  this.id = id;
   this.players = []; // default value
   this.grid = new Array(grid_width);
   this.ticks = 0;
-
 
   for(var i = 0;i<grid_width;i++)
   {
@@ -29,18 +28,21 @@ Room.prototype.updateGrid = function(body) {
 };
 
 Room.prototype.addPlayer = function(player){
-    this.player.push(player);
+    this.players.push(player);
 };
 
 Room.prototype.start = function()
 {
+    var view = this;
     setInterval(function(){
-            console.log('updating');
-            for(var i = 0;i<this.players.length;i++)
+            for(var i = 0;i<view.players.length;i++)
             {
-                this.players[i].update();
-            }    
-        },(1000/60)
+                view.players[i].update();
+                console.log(view.players[i].head.pos.X(),view.players[i].head.pos.Y());
+                io.sockets.in(view.id).emit('message', 'Player:',players[i].id,'X:',view.players[i].head.pos.X(),'Y:',view.players[i].head.pos.Y());
+            }   
+            view.ticks++; 
+        },(1000/6)
     );
 };
 

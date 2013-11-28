@@ -1,6 +1,6 @@
 function Head(posX,posY) {
     this.pos = new Vector2(posX,posY);
-    this.last_pos = new vector2(posX,posY);
+    this.last_pos = new Vector2(posX,posY);
 
     this.child = null;
     this.food = false;
@@ -18,7 +18,10 @@ Head.prototype.getPosY = function() {
 Head.prototype.update = function(direction) {
     this.last_pos.equ(this.pos);
     this.pos.inc(direction);
-    this.child.update();
+    if(this.child !== null)
+    {
+        this.child.update();
+    }
 
     if(this.food === true)
     {

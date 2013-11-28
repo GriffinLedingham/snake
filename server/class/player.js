@@ -9,8 +9,8 @@ function Player(id) {
   //-1 means this player needs to join a game to initialize
   this.tail_length = 0;
   this.room = null;
-  this.head = null;
-  this.speed = -1;
+  this.head = new Head(Math.floor((Math.random()*grid_width)+0),Math.floor((Math.random()*grid_height)+0));
+  this.speed = player_speed;
   this.direction = new Vector2(0,0);
 
   this.ticks = 0;
@@ -34,11 +34,6 @@ Player.prototype.addBody = function(){
     {
         head.child.food = true;
     }
-};
-
-Player.prototype.initialize = function() {
-    this.head = new Head(Math.floor((Math.random()*grid_width)+0),Math.floor((Math.random()*grid_height)+0));
-    this.speed = player_speed;
 };
 
 Player.prototype.update = function(){

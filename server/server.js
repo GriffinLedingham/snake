@@ -5,25 +5,26 @@ var app = express();
 Room = require('./class/room');
 Player = require('./class/player');
 Power = require('./class/power');
-Head = require('./class/power');
-Body = require('./class/power');
+Head = require('./class/head');
+Body = require('./class/body');
 Vector2 = require('./class/vector2');
 
 app.use(express.static("client/public"));
 
 var server = http.createServer(app);
 
-var io = require('socket.io').listen(server);
+io = require('socket.io').listen(server);
 
 server.listen(8142);
 
 var room1 = new Room(1);
+room1.start();
 
-console.log(direction.X(), direction.Y());
+var snake = new Player(0);
+room1.addPlayer(snake);
 
 io.sockets.on('connection', function (socket) {
-    var snake = new Player(0);
-    room1.addPlayer(snake);
+    
 });
 
 
