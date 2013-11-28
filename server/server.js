@@ -15,17 +15,38 @@ var server = http.createServer(app);
 
 io = require('socket.io').listen(server);
 
+io.set('log level', 0);
+
 server.listen(8142);
 
 var room1 = new Room(1);
 room1.start();
 
-var snake = new Player(0);
-room1.addPlayer(snake);
-
 io.sockets.on('connection', function (socket) {
-    
+
+    var uuid = guid();
+   
+    var snake = new Player(uuid,socket);
+    room1.addPlayer(snake);
+
+    socket.join(1);
+
+    socket.on('key',function(data){
+        snake.direction = new Vector2(data.x,data.y);
+    });
+
 });
+
+function s4(){
+  return Math.floor((1 + Math.random()) * 0x10000)
+             .toString(16)
+             .substring(1);
+}
+
+function guid(){
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+           s4() + '-' + s4() + s4() + s4();
+}
 
 
 

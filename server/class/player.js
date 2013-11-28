@@ -1,17 +1,19 @@
-var player_speed = 1;
+var player_speed = 10;
 
 var grid_width = 18;
 var grid_height = 10;
 
-function Player(id) {
+function Player(id,socket) {
   this.id = id; // default value
 
   //-1 means this player needs to join a game to initialize
   this.tail_length = 0;
   this.room = null;
-  this.head = new Head(Math.floor((Math.random()*grid_width)+0),Math.floor((Math.random()*grid_height)+0));
+  this.head = new Head(0,0);
   this.speed = player_speed;
   this.direction = new Vector2(0,0);
+
+  this.socket = socket;
 
   this.ticks = 0;
 }
@@ -40,6 +42,8 @@ Player.prototype.update = function(){
     if(this.ticks % this.speed === 0)
     {
         this.head.update(this.direction);
+        this.room.updateGrid(this.head);
+        this.socket.emit('playerUpdate', {x: this.head.pos.X(), y: this.head.pos.Y()});
     }
     this.ticks++;
 };

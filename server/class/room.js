@@ -1,4 +1,4 @@
-var grid_width = 10;
+var grid_width = 18;
 var grid_height = 10;
 
 function Room(id) {
@@ -28,6 +28,7 @@ Room.prototype.updateGrid = function(body) {
 };
 
 Room.prototype.addPlayer = function(player){
+    player.room = this;
     this.players.push(player);
 };
 
@@ -38,11 +39,28 @@ Room.prototype.start = function()
             for(var i = 0;i<view.players.length;i++)
             {
                 view.players[i].update();
-                console.log(view.players[i].head.pos.X(),view.players[i].head.pos.Y());
-                io.sockets.in(view.id).emit('message', 'Player:',players[i].id,'X:',view.players[i].head.pos.X(),'Y:',view.players[i].head.pos.Y());
+                //console.log(view.players[i].head.pos.X(),view.players[i].head.pos.Y());
+                //view.players[i].socket.emit('message', 'Player: '+view.players[i].id+' X: '+view.players[i].head.pos.X()+' Y: '+view.players[i].head.pos.Y());
             }   
-            view.ticks++; 
-        },(1000/6)
+            view.ticks++;
+            /*console.log('--------------------------');
+            for(var j = 0;j<grid_height;j++)
+            {
+                for(var i = 0;i<grid_width;i++)
+                {
+                    if(view.grid[i][j] === null)
+                    {
+                        process.stdout.write('0  ');
+                    }
+                    else
+                    {
+                        process.stdout.write('1  ');
+                    }
+                }
+                console.log('\n');
+            } 
+            console.log('--------------------------');*/
+        },(1000/60)
     );
 };
 
