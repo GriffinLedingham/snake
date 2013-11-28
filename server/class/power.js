@@ -7,9 +7,9 @@ function Power(id,type,posX,posY) {
 }
 
 // class functions
-Room.prototype.getID = function() {
+Power.prototype.getID = function() {
     console.log(this.id);
 };
 
 // export the class
-module.exports = Room;
+module.exports = Power;
