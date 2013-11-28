@@ -15,17 +15,33 @@
 		 * Intialize
 		 */
 		initialize:function(){
-			this.snake = new Game.Characters.Snake();
+			this.snake = new Game.Characters.Snake(0,0);
 			this.tick = 0;
+			this.bindToSocketEvents();
+			this.ready = true;
 		},
+
+
+		bindToSocketEvents:function(){
+			Game.socket.on('playerUpdate', Game.proxy(this.updatePlayers, this));
+		},
+
+		updatePlayers:function(pos){
+			var head = this.snake.head;
+			head.x = pos.x;
+			head.y = pos.y;
+		},
+
 
 		/**
 		 * Update
 		 */
 		update:function(){
-			this.snake.update();
-			this.snake.draw();
-			this.tick++;
+			if(this.ready){
+				// this.snake.update();
+				this.snake.draw();
+				this.tick++;
+			}
 			console.log('scene update');
 		},
 
