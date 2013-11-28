@@ -35,6 +35,11 @@ io.sockets.on('connection', function (socket) {
         snake.direction = new Vector2(data.x,data.y);
     });
 
+    socket.on('disconnect',function(){
+        console.log('disconnect');
+        room1.removePlayer(snake);
+    });
+
 });
 
 function s4(){

@@ -1,5 +1,5 @@
-var grid_width = 18;
-var grid_height = 10;
+var grid_width = 57;
+var grid_height = 30;
 
 function Room(id) {
   this.id = id;
@@ -23,27 +23,53 @@ Room.prototype.getID = function() {
 };
 
 Room.prototype.updateGrid = function(body) {
-    this.grid[body.last_pos.X()][body.last_pos.Y()] = null;
-    this.grid[body.pos.X()][body.pos.Y()] = body;
+    var last_x = body.last_pos.X(); 
+    var last_y = body.last_pos.Y(); 
+
+    var y = body.pos.Y(); 
+    var x = body.pos.X(); 
+
+
+    this.grid[last_x][last_y] = null;
+    this.grid[x][y] = body;
 };
 
 Room.prototype.addPlayer = function(player){
     player.room = this;
     this.players.push(player);
+    player.socket.broadcast.to(this.id).emit('newPlayer',{x:player.head.pos.X(),y:player.head.pos.Y(),id:player.id});
+};
+
+Room.prototype.removePlayer = function(player){
+    for(var i = 0;i<this.players.length;i++)
+    {
+        if(this.players[i].udid === player.udid)
+        {
+            console.log('found player');
+            this.players.splice(i,1);
+            this.grid[player.head.pos.X()][player.head.pos.Y()] = null;
+            player.socket.broadcast.to(this.id).emit('removePlayer',{id:player.id});
+            break;
+        }
+    }
 };
 
 Room.prototype.start = function()
 {
     var view = this;
     setInterval(function(){
+            var player_array = [];
             for(var i = 0;i<view.players.length;i++)
             {
                 view.players[i].update();
+                player_array.push({x:view.players[i].head.pos.X(),y:view.players[i].head.pos.Y(),id:view.players[i].id});
                 //console.log(view.players[i].head.pos.X(),view.players[i].head.pos.Y());
                 //view.players[i].socket.emit('message', 'Player: '+view.players[i].id+' X: '+view.players[i].head.pos.X()+' Y: '+view.players[i].head.pos.Y());
             }   
             view.ticks++;
-            /*console.log('--------------------------');
+
+            io.sockets.in(view.id).emit('playerUpdate',player_array);
+/*process.stdout.write('\u001B[2J\u001B[0;0f');
             for(var j = 0;j<grid_height;j++)
             {
                 for(var i = 0;i<grid_width;i++)
@@ -54,13 +80,12 @@ Room.prototype.start = function()
                     }
                     else
                     {
-                        process.stdout.write('1  ');
+                        process.stdout.write('[] ');
                     }
                 }
                 console.log('\n');
-            } 
-            console.log('--------------------------');*/
-        },(1000/60)
+            } */
+        },(1000/6)
     );
 };
 

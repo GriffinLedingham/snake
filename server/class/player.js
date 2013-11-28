@@ -1,7 +1,7 @@
-var player_speed = 10;
+var player_speed = 1;
 
-var grid_width = 18;
-var grid_height = 10;
+var grid_width = 57;
+var grid_height = 30;
 
 function Player(id,socket) {
   this.id = id; // default value
@@ -43,7 +43,7 @@ Player.prototype.update = function(){
     {
         this.head.update(this.direction);
         this.room.updateGrid(this.head);
-        this.socket.emit('playerUpdate', {x: this.head.pos.X(), y: this.head.pos.Y()});
+        //player.socket.broadcast.to(this.room).emit('playerUpdate', {x: this.head.pos.X(), y: this.head.pos.Y(), dir_x: this.direction.X(), dir_y: this.direction.Y(), ticks: this.ticks});
     }
     this.ticks++;
 };

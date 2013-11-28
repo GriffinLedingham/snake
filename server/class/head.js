@@ -1,3 +1,6 @@
+var grid_width = 57;
+var grid_height = 30;
+
 function Head(posX,posY) {
     this.pos = new Vector2(posX,posY);
     this.last_pos = new Vector2(posX,posY);
@@ -18,6 +21,27 @@ Head.prototype.getPosY = function() {
 Head.prototype.update = function(direction) {
     this.last_pos.equ(this.pos);
     this.pos.inc(direction);
+    
+    if(this.pos.X() > grid_width-1)
+    {
+        this.pos.x = 0;
+    }
+
+    if(this.pos.Y() > grid_height-1)
+    {
+        this.pos.y = 0;
+    }
+
+    if(this.pos.X() < 0)
+    {
+        this.pos.x = grid_width-1;
+    }
+
+    if(this.pos.Y() < 0)
+    {
+        this.pos.y = grid_height-1;
+    }
+
     if(this.child !== null)
     {
         this.child.update();
