@@ -7,29 +7,22 @@
 	var GamePad = Game.Utils.GamePad;
 	/**************************************/
 
-	function Snake(){
-		this.initialize();	
+	function Snake(x,y){
+		this.initialize(x,y);	
 	}
 
 	Snake.prototype = {
 
 
-		initialize:function(){
+		initialize:function(x,y){
 			this.path = [];
-			this.head = new Cartesian(3,0);
-			this.prevPos = new Cartesian(3,0);
+			this.head = new Cartesian(0,0);
+			this.prevPos = new Cartesian(0,0);
 			this.speed = 10;
-			this.direction = new Cartesian(1,0);
-			this.bodyParts = [];
-
-			this.child = new SnakeBody(0,0);
-			this.child.setParent(this);
-			this.child.food = true;
-
+			this.direction = new Cartesian(0,0);
 			this.gamePad = new GamePad();
 			this.gamePad.setAsMainPlayer();
-
-
+			this.gamePad.onButtonDown = Game.proxy(this.handleButtonPress, this);
 		},
 
 
@@ -38,11 +31,33 @@
 		},
 
 
+		handleButtonPress:function(button){
+			var message = null;
+			switch(button){
+				case 'up':
+					message = {x:0,y:-1};
+					break;
+				case 'down':
+					message = {x:0,y:1};
+					break;
+				case 'right':
+					message = {x:1,y:0};				
+					break;
+				case 'left':
+					message = {x:-1,y:0};				
+					break;
+			}
+			if(message){
+				if(Game.socket){
+					Game.socket.emit('key',message);
+				}
+			}
+		},
+
 
 		update:function(){
 			var tick = Game.SceneManager.currentScene.tick;
 			this.gamePad.update();
-
 			if(tick % this.speed == 0){
 				this.control();
 				this.prevPos.equ(this.head);
@@ -51,6 +66,7 @@
 					this.child.update();
 				}
 			}
+			
 
 			if(this.head.x > 18){
 				this.head.x = 0;
@@ -112,8 +128,9 @@
 		    context.strokeStyle = '#000';
 		    context.stroke();
 
-			this.child.draw();
-
+		    if(this.child){
+				this.child.draw();
+			}
 		}
 
 	}

@@ -121,13 +121,12 @@
 			 */
 			setAsMainPlayer:function(){
 				document.onkeydown = Game.proxy(this.handleButtonDown, this);
-				// document.onkeyup = Game.proxy(this.handleButtonUp, this);
+				document.onkeyup = Game.proxy(this.handleButtonUp, this);
 				
 				this.isRecording = true;
 				this.records = {};
 				this.recordingQueue = [];
 				this.isMainPlayer = true;
-				this.setButtonsDown(PREVIOUS_DOWN_BUTTONS, true);
 			},
 
 
@@ -221,7 +220,6 @@
 			setButtonDown:function(code,userAction){
 
 				var userAction = userAction ? true : false;
-				consol.log(code);
 				if(this.downButtons[code] !== true){
 					
 					if(this.isRecording === true && KEYS_TO_RECORD.indexOf(code) !== -1 && userAction){
