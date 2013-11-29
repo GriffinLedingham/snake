@@ -30,6 +30,7 @@ Body.prototype.update = function(){
         if(this.child === null)
         {
             this.child = new Body(this.last_pos.X(),this.last_pos.Y(),this);
+            this.child.food = false;
         }
         else
         {

@@ -1,7 +1,7 @@
-function Power(id,type,posX,posY) {
-    this.id = id;
+function Power(posX,posY,id) {
+	this.id = id;
 
-    this.type = type;
+    this.type = 'food';
     this.posX = posX;
     this.posY = posY;
 }

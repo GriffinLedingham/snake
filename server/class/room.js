@@ -7,6 +7,8 @@ function Room(id) {
   this.grid = new Array(grid_width);
   this.ticks = 0;
 
+  this.food = [];
+
   for(var i = 0;i<grid_width;i++)
   {
     this.grid[i] = new Array(grid_height);
@@ -14,6 +16,16 @@ function Room(id) {
     {
         this.grid[i][j] = null;
     }
+  }
+
+  for(var j = 0;j<5;j++)
+  {
+  	var x = Math.floor((Math.random()*grid_width)+0);
+  	var y = Math.floor((Math.random()*grid_height)+0);
+  	var temp_food = new Power(x,y,guid());
+  	this.food.push(temp_food);
+
+  	this.grid[x][y] = temp_food;
   }
 }
 
@@ -29,9 +41,16 @@ Room.prototype.updateGrid = function(body) {
     var y = body.pos.Y(); 
     var x = body.pos.X(); 
 
+    if(this.grid[x][y] !== null && typeof this.grid[x][y].type !== 'undefined' && this.grid[x][y].type === 'food')
+    {
+    	body.food = true;	
+    }
+
 
     this.grid[last_x][last_y] = null;
     this.grid[x][y] = body;
+
+
 };
 
 Room.prototype.addPlayer = function(player){
@@ -67,10 +86,21 @@ Room.prototype.start = function()
                 player_array.push(player_update_arr);
             }   
             view.ticks++;
-            io.sockets.in(view.id).emit('playerUpdate',player_array);
+            io.sockets.in(view.id).emit('playerUpdate',{players: player_array, food: view.food});
         },(1000/6)
     );
 };
+
+function s4(){
+  return Math.floor((1 + Math.random()) * 0x10000)
+             .toString(16)
+             .substring(1);
+}
+
+function guid(){
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+           s4() + '-' + s4() + s4() + s4();
+}
 
 // export the class
 module.exports = Room;
