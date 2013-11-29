@@ -45,7 +45,7 @@ io.sockets.on('connection', function (socket) {
       }
       else
       {
-        console.log(data.key);
+        console.log(data.key, pos);
         switch(data.key)
         {
           case 'left':

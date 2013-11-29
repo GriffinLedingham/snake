@@ -58,7 +58,7 @@
 
 			if(canvas_x <= 568){
 				if(Game.socket){
-					Game.socket.emit('key',{key:'left'});				
+					Game.socket.emit('key',{key:'left',pos:canvas_x});				
 				}
 			}
 			else {
