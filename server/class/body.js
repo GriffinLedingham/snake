@@ -1,6 +1,6 @@
 function Body(posX,posY,parent) {
-    this.pos = new vector2(posX,posY);
-    this.last_pos = new vector2(posX,posY);
+    this.pos = new Vector2(posX,posY);
+    this.last_pos = new Vector2(posX,posY);
 
     this.parent = parent;
     this.child = null;
@@ -23,7 +23,7 @@ Body.prototype.addFood = function(){
 
 Body.prototype.update = function(){
     this.last_pos.equ(this.pos);
-    this.pos.equ(this.parent.pos);
+    this.pos.equ(this.parent.last_pos);
 
     if(this.food === true)
     {
@@ -37,6 +37,8 @@ Body.prototype.update = function(){
             this.food = false;
         }
     }
+
+    return {x:this.pos.X(),y:this.pos.Y()};
 };
 
 

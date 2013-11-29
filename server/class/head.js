@@ -44,7 +44,7 @@ Head.prototype.update = function(direction) {
 
     if(this.child !== null)
     {
-        this.child.update();
+        //this.child.update();
     }
 
     if(this.food === true)
@@ -59,6 +59,8 @@ Head.prototype.update = function(direction) {
             this.food = false;
         }
     }
+
+    return {x:this.pos.X(),y:this.pos.Y()};
 };
 
 // export the class

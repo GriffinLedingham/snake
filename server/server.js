@@ -22,11 +22,15 @@ server.listen(8142);
 var room1 = new Room(1);
 room1.start();
 
+
+
 io.sockets.on('connection', function (socket) {
 
     var uuid = guid();
    
     var snake = new Player(uuid,socket);
+    snake.head.child = new Body(1,0,snake.head);
+    snake.head.child.child = new Body(2,0,snake.head.child);
     room1.addPlayer(snake);
 
     socket.join(1);

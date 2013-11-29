@@ -61,30 +61,13 @@ Room.prototype.start = function()
             var player_array = [];
             for(var i = 0;i<view.players.length;i++)
             {
-                view.players[i].update();
-                player_array.push({x:view.players[i].head.pos.X(),y:view.players[i].head.pos.Y(),id:view.players[i].id});
-                //console.log(view.players[i].head.pos.X(),view.players[i].head.pos.Y());
-                //view.players[i].socket.emit('message', 'Player: '+view.players[i].id+' X: '+view.players[i].head.pos.X()+' Y: '+view.players[i].head.pos.Y());
+
+                var player_update_arr = view.players[i].update();
+                player_update_arr.unshift({id: view.players[i].id});
+                player_array.push(player_update_arr);
             }   
             view.ticks++;
-
             io.sockets.in(view.id).emit('playerUpdate',player_array);
-/*process.stdout.write('\u001B[2J\u001B[0;0f');
-            for(var j = 0;j<grid_height;j++)
-            {
-                for(var i = 0;i<grid_width;i++)
-                {
-                    if(view.grid[i][j] === null)
-                    {
-                        process.stdout.write('0  ');
-                    }
-                    else
-                    {
-                        process.stdout.write('[] ');
-                    }
-                }
-                console.log('\n');
-            } */
         },(1000/6)
     );
 };

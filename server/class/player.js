@@ -11,7 +11,7 @@ function Player(id,socket) {
   this.room = null;
   this.head = new Head(0,0);
   this.speed = player_speed;
-  this.direction = new Vector2(0,0);
+  this.direction = new Vector2(-1,0);
 
   this.socket = socket;
 
@@ -41,9 +41,19 @@ Player.prototype.addBody = function(){
 Player.prototype.update = function(){
     if(this.ticks % this.speed === 0)
     {
-        this.head.update(this.direction);
+        var update_array = [];
+        var head_obj = this.head.update(this.direction);
+        update_array.push(head_obj);
+        var body_pointer = this.head.child;
+        while(body_pointer !== null)
+        {
+            var body_pointer_obj = body_pointer.update(this.direction);
+            update_array.push(body_pointer_obj);
+            body_pointer = body_pointer.child;
+        }
         this.room.updateGrid(this.head);
-        //player.socket.broadcast.to(this.room).emit('playerUpdate', {x: this.head.pos.X(), y: this.head.pos.Y(), dir_x: this.direction.X(), dir_y: this.direction.Y(), ticks: this.ticks});
+
+        return update_array;
     }
     this.ticks++;
 };
