@@ -18,7 +18,7 @@ function Room(id) {
     }
   }
 
-  for(var j = 0;j<5;j++)
+  for(var j = 0;j<10;j++)
   {
   	var x = Math.floor((Math.random()*grid_width)+0);
   	var y = Math.floor((Math.random()*grid_height)+0);
