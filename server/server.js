@@ -39,7 +39,52 @@ io.sockets.on('connection', function (socket) {
     socket.join(1);
 
     socket.on('key',function(data){
+      if(typeof data.x !== 'undefined')
+      {
         snake.direction = new Vector2(data.x,data.y);
+      }
+      else
+      {
+        switch(data.key)
+        {
+          case 'left':
+            if(snake.direction.X() === -1)
+            {
+              snake.direction = new Vector2(0,1);              
+            }
+            else if(snake.direction.X() === 1)
+            {
+              snake.direction = new Vector2(0,-1);
+            }
+            else if(snake.direction.Y() === 1)
+            {
+              snake.direction = new Vector2(1,0);
+            }
+            else if(snake.direction.Y() === -1)
+            {
+              snake.direction = new Vector2(-1,0);
+            }
+            break;
+          case 'right':
+            if(snake.direction.X() === -1)
+            {
+              snake.direction = new Vector2(0,-1);
+            }
+            else if(snake.direction.X() === 1)
+            {
+              snake.direction = new Vector2(0,1);
+            }
+            else if(snake.direction.Y() === 1)
+            {
+              snake.direction = new Vector2(-1,0);
+            }
+            else if(snake.direction.Y() === -1)
+            {
+              snake.direction = new Vector2(1,0);
+            }
+            break;
+        }
+      }
     });
 
     socket.on('disconnect',function(){
