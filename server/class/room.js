@@ -48,6 +48,9 @@ Room.prototype.updateGrid = function(body) {
       var fd_y = Math.floor((Math.random()*grid_height)+0);
 
       this.grid[fd_x][fd_y] = extend({}, this.grid[x][y]);
+
+      this.grid[fd_x][fd_y].posX = fd_x;
+      this.grid[fd_x][fd_y].posY = fd_y;
     }
 
 
