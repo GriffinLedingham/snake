@@ -24,11 +24,7 @@
 			this.gamePad.setAsMainPlayer();
 			this.gamePad.onButtonDown = Game.proxy(this.handleButtonPress, this);
 			
-			var piece = new SnakeBody(0,0);
-			piece.setParent(this);
-			piece.food = 3;
-			this.child = piece;
-
+			this.child = null;
 		},
 
 

@@ -2,6 +2,7 @@
 	"use strict";
 
 	var Snake = Game.Characters.Snake;
+	var SnakeBody = Game.Characters.SnakeBody;
 	var Food = Game.Characters.Food;
 
 	function Main(){
@@ -21,7 +22,7 @@
 			this.ticks = 0;
 			this.bindToSocketEvents();
 			this.ready = true;
-			this.singlePlayer = true;
+			this.singlePlayer = false;
 
 			if(this.singlePlayer){
 				this.snakes[1] = new Snake(0,0);
@@ -66,13 +67,34 @@
 			var snakes = this.snakes;
 			for(var i in players){
 				var player = players[i];
-				if(snakes[player.id]){
-					var snake = snakes[player.id];
-					snake.sync = player;
+
+				var id = player[0].id;
+				var head = player[1];
+				var pieces = player.length;
+				var part;
+
+				if(snakes[id]){
+					var snake = snakes[id];
+					snake.head.x = head.x;
+					snake.head.y = head.y
+					part = snake;
 				} else {
-					console.log('Creating Snake ' + player.id);
-					var snake = new Snake(player.x, player.y);
-					snakes[player.id] = snake;
+					console.log('Creating Snake ' + id);
+					var snake = new Snake(head.x, head.y);
+					snakes[id] = snake;
+					part = snake;
+				}
+				for(var i = 2; i < pieces; i++){
+					var o = player[i];
+					if(part.child == null){
+						console.log('Creating SnakeBody')
+						var newPiece = new SnakeBody();
+						part.child = newPiece;
+					} else {
+						part.child.pos.x = o.x;
+						part.child.pos.y = o.y;
+					}
+					part = part.child;
 				}
 			}
 		},
