@@ -2,6 +2,8 @@
 	"use strict";
 
 	var Snake = Game.Characters.Snake;
+	var SnakeBody = Game.Characters.SnakeBody;
+	var Food = Game.Characters.Food;
 
 	function Main(){
 		this.initialize();	
@@ -15,21 +17,86 @@
 		 * Intialize
 		 */
 		initialize:function(){
-			this.snake = new Game.Characters.Snake(0,0);
-			this.tick = 0;
+			this.snakes = {};
+			this.food = [];
+			this.ticks = 0;
 			this.bindToSocketEvents();
 			this.ready = true;
+			this.singlePlayer = false;
+
+			if(this.singlePlayer){
+				this.snakes[1] = new Snake(0,0);
+				for(var i = 0; i < 4; i++){
+					this.food.push(new Food());
+				}
+			}
 		},
 
+		collideWithFood:function(head){
+			var allfood = this.food;
+			for(var i in allfood){
+				var food = allfood[i];
+				var food_pos = food.pos;
+				if(food_pos.x == head.x && food_pos.y == head.y){
+					head.food = food.value;
+					allfood[i] = new Food();					
+				}
+			}
+		},
 
 		bindToSocketEvents:function(){
-			Game.socket.on('playerUpdate', Game.proxy(this.updatePlayers, this));
+			if(Game.socket){
+				Game.socket.on('playerUpdate', Game.proxy(this.updatePlayers, this));
+				Game.socket.on('newPlayer', Game.proxy(this.newPlayer, this));			
+				Game.socket.on('removePlayer', Game.proxy(this.removePlayer, this));			
+			}
 		},
 
-		updatePlayers:function(pos){
-			var head = this.snake.head;
-			head.x = pos.x;
-			head.y = pos.y;
+		removePlayer:function(player){
+			if(this.snakes[player.id]){
+				delete this.snakes[player.id];
+			}
+		},
+
+		newPlayer:function(player){
+			var snake = new Snake(player.x, player.y);
+			this.snakes[player.id] = snake;
+		},
+
+		updatePlayers:function(players){
+			var snakes = this.snakes;
+			for(var i in players){
+				var player = players[i];
+
+				var id = player[0].id;
+				var head = player[1];
+				var pieces = player.length;
+				var part;
+
+				if(snakes[id]){
+					var snake = snakes[id];
+					snake.head.x = head.x;
+					snake.head.y = head.y
+					part = snake;
+				} else {
+					console.log('Creating Snake ' + id);
+					var snake = new Snake(head.x, head.y);
+					snakes[id] = snake;
+					part = snake;
+				}
+				for(var i = 2; i < pieces; i++){
+					var o = player[i];
+					if(part.child == null){
+						console.log('Creating SnakeBody')
+						var newPiece = new SnakeBody();
+						part.child = newPiece;
+					} else {
+						part.child.pos.x = o.x;
+						part.child.pos.y = o.y;
+					}
+					part = part.child;
+				}
+			}
 		},
 
 
@@ -38,11 +105,20 @@
 		 */
 		update:function(){
 			if(this.ready){
-				// this.snake.update();
-				this.snake.draw();
-				this.tick++;
+				var snakes = this.snakes;
+				var food = this.food;
+				
+				for(var i in snakes){
+					snakes[i].update();
+					snakes[i].draw();
+				}
+
+				for(var i in food){
+					food[i].draw(); 
+				}
+
+				this.ticks++;
 			}
-			console.log('scene update');
 		},
 
 

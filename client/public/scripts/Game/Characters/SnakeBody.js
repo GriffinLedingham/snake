@@ -33,7 +33,10 @@
 
 			if(this.food && !this.child){
 				this.child = new SnakeBody(0,0);
+				this.child.pos.equ(this.prevPos);
 				this.child.setParent(this);
+				this.child.food = this.food;
+				this.child.food--;
 				this.food = false;
 			}
 		},
@@ -49,13 +52,13 @@
 
 		draw:function(){
 
-			var pos = this.pos.factor(50);			
+			var pos = this.pos.factor(20);			
 			var x = pos.x;
 			var y = pos.y;
 
 			var context = Game.ctx;
 		    context.beginPath();
-		    context.rect(x, y, 50, 50);
+		    context.rect(x, y, 20, 20);
 		    context.fillStyle = '#3C87B9';
 		    context.fill();
 		    context.lineWidth = 1;
