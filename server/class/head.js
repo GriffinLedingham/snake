@@ -52,6 +52,7 @@ Head.prototype.update = function(direction) {
         if(this.child === null)
         {
             this.child = new Body(this.last_pos.X(),this.last_pos.Y(),this);
+            this.food = false;
         }
         else
         {
