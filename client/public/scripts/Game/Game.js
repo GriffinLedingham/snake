@@ -70,7 +70,7 @@
 
 		socketConnect:function(){
 			if(typeof io !== 'undefined'){
-				var socket = io.connect('http://ec2-50-19-148-178.compute-1.amazonaws.com:8142/');
+				var socket = io.connect('http://ec2-50-19-148-178.compute-1.amazonaws.com:8142');
 		       	socket.on('connect',function(){
 		       		console.log('socket connected');
 		       	});
