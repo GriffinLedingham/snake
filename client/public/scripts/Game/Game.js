@@ -50,7 +50,7 @@
 
 
 		socketConnect:function(){
-			if(io){
+			if(typeof io !== 'undefined'){
 				var socket = io.connect('http://192.168.1.111:8142');
 		       	socket.on('connect',function(){
 		       		console.log('socket connected');

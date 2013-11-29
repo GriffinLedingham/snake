@@ -18,11 +18,17 @@
 			this.path = [];
 			this.head = new Cartesian(x,y);
 			this.prevPos = new Cartesian(x,y);
-			this.speed = 10;
-			this.direction = new Cartesian(0,0);
+			this.speed = 5;
+			this.direction = new Cartesian(1,0);
 			this.gamePad = new GamePad();
 			this.gamePad.setAsMainPlayer();
 			this.gamePad.onButtonDown = Game.proxy(this.handleButtonPress, this);
+			
+			var piece = new SnakeBody(0,0);
+			piece.setParent(this);
+			piece.food = 3;
+			this.child = piece;
+
 		},
 
 
@@ -32,6 +38,8 @@
 
 
 		handleButtonPress:function(button){
+			this.gamePad.update();
+
 			var message = null;
 			switch(button){
 				case 'up':
@@ -56,7 +64,9 @@
 
 
 		update:function(){
-			var ticks = Game.SceneManager.currentScene.ticks;
+			var currentScene = Game.SceneManager.currentScene;
+			var ticks = currentScene.ticks;
+
 			this.gamePad.update();
 
 			if(this.sync){
@@ -69,20 +79,43 @@
 				this.sync = null;
 			}
 
-
-			// else {
-			// 	if(ticks % this.speed == 0){
-			// 		this.control();
-			// 		this.prevPos.equ(this.head);
-			// 		this.head.inc(this.direction);
-			// 		if(this.child){
-			// 			this.child.update();
-			// 		}
-			// 	}
-			// }
+			if(currentScene.singlePlayer){
+				if(ticks % this.speed == 0){
+					this.control();
+					this.prevPos.equ(this.head);
+					this.head.inc(this.direction);
+					this.checkBounds();
+					currentScene.collideWithFood(this.head);
+					if(this.child){
+						if(this.head.food){
+							this.child.food = this.head.food;
+							this.head.food = false;
+						}
+						this.child.update();
+					}
+				}
+			}
 
 
 	
+		},
+
+		checkBounds:function(){
+			var head = this.head;
+			var x = head.x;
+			var y = head.y;
+			if(x < 0){
+				head.x = 57;
+			}
+			if(y < 0){
+				head.y = 31;
+			}
+			if(x > 57){
+				head.x = 0;
+			}
+			if(y > 57){
+				head.y = 0;
+			}
 		},
 
 		control:function(){

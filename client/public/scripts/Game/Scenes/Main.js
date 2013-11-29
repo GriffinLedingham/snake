@@ -2,6 +2,7 @@
 	"use strict";
 
 	var Snake = Game.Characters.Snake;
+	var Food = Game.Characters.Food;
 
 	function Main(){
 		this.initialize();	
@@ -16,16 +17,31 @@
 		 */
 		initialize:function(){
 			this.snakes = {};
+			this.food = [];
 			this.ticks = 0;
 			this.bindToSocketEvents();
 			this.ready = true;
-			// this.singlePlayer = true;
+			this.singlePlayer = true;
 
 			if(this.singlePlayer){
-				this.snakes[1];
+				this.snakes[1] = new Snake(0,0);
+				for(var i = 0; i < 4; i++){
+					this.food.push(new Food());
+				}
 			}
 		},
 
+		collideWithFood:function(head){
+			var allfood = this.food;
+			for(var i in allfood){
+				var food = allfood[i];
+				var food_pos = food.pos;
+				if(food_pos.x == head.x && food_pos.y == head.y){
+					head.food = food.value;
+					allfood[i] = new Food();					
+				}
+			}
+		},
 
 		bindToSocketEvents:function(){
 			if(Game.socket){
@@ -68,10 +84,17 @@
 		update:function(){
 			if(this.ready){
 				var snakes = this.snakes;
+				var food = this.food;
+				
 				for(var i in snakes){
 					snakes[i].update();
 					snakes[i].draw();
 				}
+
+				for(var i in food){
+					food[i].draw(); 
+				}
+
 				this.ticks++;
 			}
 		},
