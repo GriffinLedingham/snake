@@ -63,7 +63,7 @@
 			}
 			else {
 				if(Game.socket){
-					Game.socket.emit('key',{key:'right'});				
+					Game.socket.emit('key',{key:'right',pos:canvas_x});				
 				}			
 			}
 		},
