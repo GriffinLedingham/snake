@@ -46,12 +46,31 @@
 			createjs.Ticker.useRAF = false;
 			createjs.Ticker.setFPS(30);				
 			createjs.Ticker.addEventListener("tick", tick);	
+
+			this.canvas.addEventListener('touchstart',this.proxy(this.handleTouch,this));
+
 		},
 
+		handleTouch:function(e){
+			event.preventDefault();
+			var canvas_x = event.targetTouches[0].pageX;
+			var canvas_y = event.targetTouches[0].pageY
+
+			if(canvas_x <= 568){
+				if(Game.socket){
+					Game.socket.emit('key',{key:'left'});				
+				}
+			}
+			} else {
+				if(Game.socket){
+					Game.socket.emit('key',{key:'right'});				
+				}			
+			}
+		},
 
 		socketConnect:function(){
 			if(typeof io !== 'undefined'){
-				var socket = io.connect('http://ec2-50-19-148-178.compute-1.amazonaws.com:8142');
+				var socket = io.connect('http://192.168.1.111:8142');
 		       	socket.on('connect',function(){
 		       		console.log('socket connected');
 		       	});
