@@ -75,9 +75,10 @@
 			for(var i in food){
 				var f = food[i];
 				var yum = new Food();
-				yum.pos.x = f.x;
-				yum.pos.y = f.y;
+				yum.pos.x = f.posX;
+				yum.pos.y = f.posY;
 				yum.draw();
+
 				this.food.push(yum)
 			}
 
