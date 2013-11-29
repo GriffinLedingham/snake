@@ -56,7 +56,7 @@
 			var canvas_x = event.targetTouches[0].pageX;
 			var canvas_y = event.targetTouches[0].pageY
 
-			if(canvas_x <= 568){
+			if(canvas_x <= 140){
 				if(Game.socket){
 					Game.socket.emit('key',{key:'left',pos:canvas_x});				
 				}
