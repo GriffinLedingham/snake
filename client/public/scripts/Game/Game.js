@@ -61,7 +61,7 @@
 					Game.socket.emit('key',{key:'left'});				
 				}
 			}
-			} else {
+			else {
 				if(Game.socket){
 					Game.socket.emit('key',{key:'right'});				
 				}			
