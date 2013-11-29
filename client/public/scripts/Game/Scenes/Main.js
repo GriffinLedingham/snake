@@ -63,7 +63,24 @@
 			this.snakes[player.id] = snake;
 		},
 
-		updatePlayers:function(players){
+		updatePlayers:function(state){
+
+
+			console.log(state);
+			var players = state.players;
+
+			var food = state.food;
+			this.food = [];
+
+			for(var i in food){
+				var f = food[i];
+				var yum = new Food();
+				yum.pos.x = f.x;
+				yum.pos.y = f.y;
+				yum.draw();
+				this.food.push(yum)
+			}
+
 			var snakes = this.snakes;
 			for(var i in players){
 				var player = players[i];
