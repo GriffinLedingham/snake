@@ -51,6 +51,15 @@ Room.prototype.updateGrid = function(body) {
 
       this.grid[fd_x][fd_y].posX = fd_x;
       this.grid[fd_x][fd_y].posY = fd_y;
+
+      for(var i = 0;i<this.food.length;i++)
+      {
+        if(this.grid[x][y].id === this.food[i].id)
+        {
+          this.food[i].posX = fd_x;
+          this.food[i].posY = fd_y;
+        }
+      }
     }
 
 
