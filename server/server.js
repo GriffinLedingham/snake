@@ -9,6 +9,9 @@ Head = require('./class/head');
 Body = require('./class/body');
 Vector2 = require('./class/vector2');
 
+extend = require('util')._extend;
+
+
 app.use(express.static("client/public"));
 
 var server = http.createServer(app);

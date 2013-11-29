@@ -44,7 +44,13 @@ Room.prototype.updateGrid = function(body) {
     if(this.grid[x][y] !== null && typeof this.grid[x][y].type !== 'undefined' && this.grid[x][y].type === 'food')
     {
     	body.food = true;	
+      var fd_x = Math.floor((Math.random()*grid_width)+0);
+      var fd_y = Math.floor((Math.random()*grid_height)+0);
+
+      this.grid[fd_x][fd_y] = extend({}, this.grid[x][y]);
     }
+
+
 
 
     this.grid[last_x][last_y] = null;
